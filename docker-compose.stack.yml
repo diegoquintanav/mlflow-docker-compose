@@ -1,0 +1,46 @@
+version: "3.7"
+
+services:
+  minio:
+    networks:
+      - traefik
+    deploy:
+      replicas: 1
+      labels:
+        - "traefik.enable=true"
+        - "traefik.docker.network=traefik"
+        # https
+        - "traefik.http.routers.mlflow_minio.rule=Host(`mlflow-minio.moll.somenergia.coop`)"
+        - "traefik.http.routers.mlflow_minio.entrypoints=websecure"
+        - "traefik.http.routers.mlflow_minio.tls=true"
+        - "traefik.http.services.mlflow_minio.loadbalancer.server.port=9000"
+  db:
+    networks:
+      - traefik
+    deploy:
+      replicas: 1
+      labels:
+        - "traefik.enable=true"
+        - "traefik.docker.network=traefik"
+        # https
+        - "traefik.http.routers.mlflow_db.rule=Host(`mlflow-db.moll.somenergia.coop`)"
+        - "traefik.http.routers.mlflow_db.entrypoints=websecure"
+        - "traefik.http.routers.mlflow_db.tls=true"
+        - "traefik.http.services.mlflow_db.loadbalancer.server.port=3306"
+  web:
+    networks:
+      - traefik
+    deploy:
+      replicas: 1
+      labels:
+        - "traefik.enable=true"
+        - "traefik.docker.network=traefik"
+        # https
+        - "traefik.http.routers.mlflow_web.rule=Host(`mlflow-web.moll.somenergia.coop`)"
+        - "traefik.http.routers.mlflow_web.entrypoints=websecure"
+        - "traefik.http.routers.mlflow_web.tls=true"
+        - "traefik.http.services.mlflow_web.loadbalancer.server.port=5000"
+
+networks:
+  traefik:
+    external: true

@@ -1,0 +1,14 @@
+version: "3.7"
+
+services:
+  minio:
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    command: server /data --console-address ':9001' --address ':9000'
+  db:
+    ports:
+      - "3306:3306"
+  web:
+    ports:
+      - "5000:5000"
